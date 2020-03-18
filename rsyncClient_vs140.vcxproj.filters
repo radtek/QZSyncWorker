@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\FT3000GMMedia.cpp">
+      <Filter>Media</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HT5488003Media.cpp">
+      <Filter>Media</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FJCAMedia.cpp">
+      <Filter>Media</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BCBSSealProvider.cpp">
+      <Filter>Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KGSealProvider.cpp">
+      <Filter>Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MediaBase.cpp">
+      <Filter>Media</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OESSealProvider.cpp">
+      <Filter>Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SealProvider.cpp">
+      <Filter>Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SOFMedia.cpp">
+      <Filter>Media</Filter>
+    </ClCompile>
+    <ClCompile Include="src\QZSyncWorker.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\XSSealProvider.cpp">
+      <Filter>Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rsyncClient.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DianJuSealProvider.cpp">
+      <Filter>Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TZWYSealProvider.cpp">
+      <Filter>Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DianJuSealProvider2.cpp">
+      <Filter>Provider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\BJCASealProvider.cpp">
+      <Filter>Provider</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="src\CDKG_GetKeyInfo_FJRS.h" />
+    <ClInclude Include="src\FT3000GMMedia.h">
+      <Filter>Media</Filter>
+    </ClInclude>
+    <ClInclude Include="src\HT5488003Media.h">
+      <Filter>Media</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FJCAMedia.h">
+      <Filter>Media</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BCBSSealProvider.h">
+      <Filter>Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KGSealProvider.h">
+      <Filter>Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MediaBase.h">
+      <Filter>Media</Filter>
+    </ClInclude>
+    <ClInclude Include="src\OESSealProvider.h">
+      <Filter>Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SealProvider.h">
+      <Filter>Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SOFMedia.h">
+      <Filter>Media</Filter>
+    </ClInclude>
+    <ClInclude Include="src\QZSyncWorker.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\XSSealProvider.h">
+      <Filter>Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\rsyncClient.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Utility.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DianJuSealProvider.h">
+      <Filter>Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TZWYSealProvider.h">
+      <Filter>Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DianJuSealProvider2.h">
+      <Filter>Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\BJCASealProvider.h">
+      <Filter>Provider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SProvider.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="rsyncClient.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="QZSyncWorker.json">
+      <Filter>Configuration Files</Filter>
+    </None>
+    <None Include="rsyncClient.properties">
+      <Filter>Configuration Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Provider">
+      <UniqueIdentifier>{a8ae4a72-bfac-4b31-ba9d-1bd4dd53c890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Media">
+      <UniqueIdentifier>{fdb9bee8-22f3-4a82-951a-4c72269e8e1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{54e17155-d0c5-4cca-a7bd-2a501e45d9ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Configuration Files">
+      <UniqueIdentifier>{49b1b0f0-5f4b-4c3c-8a5b-563e7251cc10}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="CASignature.xml">
+      <Filter>Configuration Files</Filter>
+    </Xml>
+  </ItemGroup>
+</Project>
