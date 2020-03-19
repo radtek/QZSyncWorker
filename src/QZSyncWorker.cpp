@@ -79,9 +79,6 @@ void QZSyncWorker::InitMedias()
 
 void QZSyncWorker::InitSealProviders()
 {
-#ifdef EPOINT_OES_ONLY
-	_oess.push_back(new OESSealProvider);
-#else
 	_oess.push_back(new OESSealProvider);
 	_oess.push_back(new XSSealProvider);
 	_oess.push_back(new KGSealProvider);
@@ -91,7 +88,6 @@ void QZSyncWorker::InitSealProviders()
 	/// TZWYSealProvider will crash when read other seals.
 	_oess.push_back(new BJCASealProvider);
 	//_oess.push_back(new TZWYSealProvider);
-#endif // EPOINT_OES_ONLY
 }
 
 void QZSyncWorker::runTask()
@@ -163,6 +159,24 @@ void QZSyncWorker::extractKeyInfo()
 			std::string message(format("QZSyncWorker Composite Exception %[1]d : %[0]s", e.message(), e.code()));
 			utility_message(message);
 		}
+	}
+}
+
+void QZSyncWorker::extractSealDataOES()
+{
+	Poco::FastMutex::ScopedLock loc(_mutex);
+
+	try
+	{
+		Poco::AutoPtr<SealProvider> oes(new OESSealProvider);
+		oes->extract(_cert);
+		_name = oes->getProperty("name");
+		_seals = oes->getProperty("seals");
+	}
+	catch (Poco::Exception& e)
+	{
+		std::string message(format("QZSyncWorker OES Exception %[1]d : %[0]s", e.message(), e.code()));
+		utility_message(message);
 	}
 }
 
@@ -256,7 +270,10 @@ void QZSyncWorker::composite()
 
 	if (infoexpired()) {
 
+#ifndef EPOINT_OES_ONLY
 		extractSealData();
+#endif // EPOINT_OES_ONLY
+		extractSealDataOES();
 
 		if (_seals.empty())
 			throw Poco::CircularReferenceException("Can not read seal data!", "composite");

@@ -41,6 +41,7 @@ namespace Reach {
 		bool hasSync();
 		bool infoexpired();
 		void extractKeyInfo();
+		void extractSealDataOES();
 		void extractSealData();
 		void GeneratedMD5();
 		void GeneratedCode();
