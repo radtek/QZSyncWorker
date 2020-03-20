@@ -62,7 +62,9 @@ QZSyncWorker::QZSyncWorker()
 		throw Poco::UnhandledException("config lost", "QZSyncWorker.json");
 
 	InitMedias();
+#ifndef EPOINT_OES_ONLY
 	InitSealProviders();
+#endif // EPOINT_OES_ONLY
 }
 
 void QZSyncWorker::InitMedias()
