@@ -263,7 +263,7 @@ xcopy /y $(ProjectDir)CASignature.xml $(OutDir)</Command>
       <ImportLibrary>
       </ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
-      <ProgramDatabaseFile>$(OutDir)$(TargetFileName).pdb</ProgramDatabaseFile>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y $(ProjectDir)rsyncClient.properties $(OutDir)</Command>
