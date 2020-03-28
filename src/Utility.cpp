@@ -244,7 +244,10 @@ std::string Utility::CodeFromDN(const std::string& cert)
 
 	X509Certificate x509(ss);
 	std::string issuer = x509.issuerName(X509Certificate::NID_COMMON_NAME); ///DN - CN
-	
+	/// Use DN - O Item  if CN is empty 
+	if (issuer.empty())
+		issuer = x509.issuerName(X509Certificate::NID_ORGANIZATION_NAME);
+
 	Poco::MD5Engine md5;
 	Poco::DigestOutputStream ds(md5);
 	ds << issuer;
