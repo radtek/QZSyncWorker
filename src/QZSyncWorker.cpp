@@ -49,6 +49,8 @@ QZSyncWorker::QZSyncWorker()
 	:Task("QZSyncWorker"),
 	session("SQLite", "syncQLite.db")
 {
+	Application& app = Application::instance();
+
 	session << "CREATE TABLE IF NOT EXISTS syncSDMakeup (id integer primary key, keysn VARCHAR(32), md5value VARCHAR(32),\
 		sync BOOLEAN DEFAULT 0, create_time datetime DEFAULT(datetime('now', 'localtime')),\
 		modify_time datetime DEFAULT(datetime('now', 'localtime')),\
@@ -58,8 +60,10 @@ QZSyncWorker::QZSyncWorker()
 	FileInputStream in(Utility::config("QZSyncWorker.json"));
 	object = extract<Object::Ptr>(in);
 	poco_assert(object);
-	if (!object)
+	if (!object) {
+		poco_critical(app.logger(), "The configuration file was lost : QZSyncWorker.json");
 		throw Poco::UnhandledException("config lost", "QZSyncWorker.json");
+	}
 
 	InitMedias();
 #ifndef EPOINT_OES_ONLY
@@ -89,7 +93,7 @@ void QZSyncWorker::InitSealProviders()
 	//_oess.push_back(new BCBSSealProvider);
 	/// TZWYSealProvider will crash when read other seals.
 	_oess.push_back(new BJCASealProvider);
-	//_oess.push_back(new TZWYSealProvider);
+	_oess.push_back(new TZWYSealProvider);
 }
 
 void QZSyncWorker::runTask()
@@ -98,7 +102,7 @@ void QZSyncWorker::runTask()
 
 	while (!sleep(5000))
 	{
-		app.logger().trace("busy doing QZSyncTask... " + DateTimeFormatter::format(app.uptime()));
+		poco_trace_f1(app.logger(), "busy doing QZSyncTask... %s " , DateTimeFormatter::format(app.uptime()));
 		if (isCancelled()) break;
 		try
 		{
@@ -111,8 +115,7 @@ void QZSyncWorker::runTask()
 		}
 		catch (Poco::Exception& e)
 		{
-			std::string message(format("QZSyncWorker runTask Exception: %d, %s", e.code(), e.displayText()));
-			utility_message(message);
+			poco_warning_f2(app.logger(), "QZSyncWorker runTask Exception: %d, %s", e.code(), e.displayText());
 		}
 
 	}
@@ -127,7 +130,7 @@ bool QZSyncWorker::IsUSBKeyPresent()
 	if (devicelist.empty())
 		return false;
 
-	utility_message(devicelist);
+	poco_information_f1(app.logger(), "Detected Device : %s", devicelist);
 	JSON_ARRARY_PARSE(devicelist);
 	/// only a device connected
 	if (da.size() > 1 || da.empty())
@@ -136,7 +139,7 @@ bool QZSyncWorker::IsUSBKeyPresent()
 	std::string hid = da[0]["HardwareID"].toString();
 	
 	app.config().setString("hardware.hid", hid);
-	utility_message(hid);
+	poco_information_f1(app.logger(), "PID_VID : %s" ,hid);
 
 	return true;
 }
@@ -267,8 +270,10 @@ bool QZSyncWorker::infoexpired()
 
 void QZSyncWorker::composite()
 {
+	Application& app = Application::instance();
+
 	extractKeyInfo();
-	utility_message(_cert);
+	poco_information_f1(app.logger(), "Get Cert : %s", _cert);
 
 	if (infoexpired()) {
 
@@ -289,9 +294,9 @@ void QZSyncWorker::composite()
 		message.append(format("validStart:%s,validEnd%:%s\n", _validStart, _validEnd));
 		message.append(format("keysn:%s,dataMD5%:%s\n", _keysn, _md5));
 		message.append(format("seal -> \n%s", _seals));
-		utility_message(message);
+		poco_information_f1(app.logger(), "seal data details:", message);
 	}
-	else utility_message("seal data has vaild!");
+	else poco_information(app.logger(), "seal data has vaild!");
 }
 
 void QZSyncWorker::updateStatus()
@@ -401,6 +406,7 @@ void QZSyncWorker::checkFromServer()
 {
 	if (hasSync()) return;
 
+	Application& app = Application::instance();
 	DynamicStruct ds = *object;
 
 	Object check;
@@ -408,7 +414,7 @@ void QZSyncWorker::checkFromServer()
 	check.set("keysn", _keysn);
 	check.set("dataMD5", _md5);
 
-	utility_message_f1("check : %s\n ", Var(check).convert<std::string>());
+	poco_information_f1(app.logger(), "check : %s\n ", Var(check).convert<std::string>());
 
 	std::string data = Var(check).convert<std::string>();
 	URI uri(ds["url"]["check"].toString());
@@ -422,16 +428,16 @@ void QZSyncWorker::checkFromServer()
 	std::istream& out = session.receiveResponse(response);
 	DynamicStruct res = *extract<Object::Ptr>(out);
 
-	utility_message_f2("checking code:%s message:%s\n", res["code"].toString(), res["message"].toString());
+	poco_information_f2(app.logger(), "checking code:%s message:%s\n", res["code"].toString(), res["message"].toString());
 
 	if (res["code"] == "1" || res["code"] == "6")
 		setSync(_keysn);
-
-	//return (res["code"] == "0" || res["code"] == "7");
 }
 
 void QZSyncWorker::sendToServer()
 {
+	Application& app = Application::instance();
+
 	DynamicStruct ds = *object;
 
 	ds["fmt"]["keysn"] = _keysn;
@@ -452,7 +458,7 @@ void QZSyncWorker::sendToServer()
 	HTTPResponse response;
 	std::istream& out = session.receiveResponse(response);
 	DynamicStruct res = *extract<Object::Ptr>(out);
-	utility_message_f2("transfer code:%s message:%s\n", res["code"].toString(), res["message"].toString());
+	poco_information_f2(app.logger(), "transfer code:%s message:%s\n", res["code"].toString(), res["message"].toString());
 
 	if (res["code"] != "0" && res["code"] != "10")
 		throw Poco::LogicException("transfer failed!", res.toString());

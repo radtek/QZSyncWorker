@@ -225,8 +225,8 @@ void Utility::message(const std::string& message)
 		<< stringToken
 		<< std::endl << std::endl;
 
-	poco_information(app.logger(), ostr.str());
-	OutputDebugStringA(Utility::UTF8EncodingGBK(ostr.str()).c_str());
+	poco_debug(app.logger(), ostr.str());
+	poco_debug(app.logger(), Utility::UTF8EncodingGBK(ostr.str()));
 }
 
 std::string Utility::formatX509(const std::string& cert)
