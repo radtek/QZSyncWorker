@@ -16,7 +16,7 @@ BCBSSealProvider::BCBSSealProvider()
 {
 	utility_message("Enter BCBSSealProvider eseals");
 
-	sl.load(Utility::config("seals\\BCBS\\SEAL_BaiCheng.dll"));
+	sl.load(Utility::config("SEAL_BaiCheng.dll"));
 
 	setProperty("Provider", "BCBSSealProvider");
 }
