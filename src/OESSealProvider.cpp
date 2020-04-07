@@ -120,14 +120,14 @@ int OESSealProvider::count()
 {
 	int count = 0;
 
-	typedef int(__stdcall *OES_GetSealCount)(const char*signCert, const long DataLen, unsigned char* puchID, long* puchIDsLen);
+	typedef int(__stdcall *OES_GetSealCount)(const char*signCert, const long DataLen, unsigned char* puchID, long* puchIDsLen, bool isDownload);
 	std::string name("OES_GetSealCount");
 	if (sl.hasSymbol(name))
 	{
 		OES_GetSealCount fn = (OES_GetSealCount)sl.getSymbol(name);
 		const long len = 2048;
 		unsigned char discard[len] = { 0 };
-		count = fn(_certContent.data(), _certContent.size(), discard, const_cast<long*>(&len));
+		count = fn(_certContent.data(), _certContent.size(), discard, const_cast<long*>(&len), true);
 		
 		utility_message_f1("kinsec seal.data : -> %d", count);
 	}
