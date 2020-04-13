@@ -26,6 +26,7 @@
 #include "TZWYSealProvider.h"
 #include "BCBSSealProvider.h"
 #include "BJCASealProvider.h"
+#include "SESSealProvider.h"
 
 #include "HT5488003Media.h"
 #include "FT3000GMMedia.h"
@@ -66,9 +67,7 @@ QZSyncWorker::QZSyncWorker()
 	}
 
 	InitMedias();
-#ifndef EPOINT_OES_ONLY
 	InitSealProviders();
-#endif // EPOINT_OES_ONLY
 }
 
 void QZSyncWorker::InitMedias()
@@ -85,15 +84,20 @@ void QZSyncWorker::InitMedias()
 
 void QZSyncWorker::InitSealProviders()
 {
+#ifndef EPOINT_OES_ONLY
 	_oess.push_back(new OESSealProvider);
 	_oess.push_back(new XSSealProvider);
 	_oess.push_back(new KGSealProvider);
 	_oess.push_back(new DianJuSealProvider);
 	_oess.push_back(new DianJuSealProvider2);
+	_oess.push_back(new SESSealProvider);
 	//_oess.push_back(new BCBSSealProvider);
 	/// TZWYSealProvider will crash when read other seals.
 	_oess.push_back(new BJCASealProvider);
 	_oess.push_back(new TZWYSealProvider);
+#else 
+	_oess.push_back(new OESSealProvider);
+#endif // EPOINT_OES_ONLY
 }
 
 void QZSyncWorker::runTask()
@@ -273,14 +277,11 @@ void QZSyncWorker::composite()
 	Application& app = Application::instance();
 
 	extractKeyInfo();
-	poco_information_f1(app.logger(), "Get Cert : %s", _cert);
+	poco_notice_f1(app.logger(), "Get Cert : %s", _cert);
 
 	if (infoexpired()) {
 
-#ifndef EPOINT_OES_ONLY
 		extractSealData();
-#endif // EPOINT_OES_ONLY
-		extractSealDataOES();
 
 		if (_seals.empty())
 			throw Poco::CircularReferenceException("Can not read seal data!", "composite");
@@ -294,9 +295,9 @@ void QZSyncWorker::composite()
 		message.append(format("validStart:%s,validEnd%:%s\n", _validStart, _validEnd));
 		message.append(format("keysn:%s,dataMD5%:%s\n", _keysn, _md5));
 		message.append(format("seal -> \n%s", _seals));
-		poco_information_f1(app.logger(), "seal data details:", message);
+		poco_notice_f1(app.logger(), "seal data details:", message);
 	}
-	else poco_information(app.logger(), "seal data has vaild!");
+	else poco_notice(app.logger(), "seal data has vaild!");
 }
 
 void QZSyncWorker::updateStatus()
@@ -414,7 +415,7 @@ void QZSyncWorker::checkFromServer()
 	check.set("keysn", _keysn);
 	check.set("dataMD5", _md5);
 
-	poco_information_f1(app.logger(), "check : %s\n ", Var(check).convert<std::string>());
+	poco_notice_f1(app.logger(), "check : %s\n ", Var(check).convert<std::string>());
 
 	std::string data = Var(check).convert<std::string>();
 	URI uri(ds["url"]["check"].toString());
@@ -428,7 +429,7 @@ void QZSyncWorker::checkFromServer()
 	std::istream& out = session.receiveResponse(response);
 	DynamicStruct res = *extract<Object::Ptr>(out);
 
-	poco_information_f2(app.logger(), "checking code:%s message:%s\n", res["code"].toString(), res["message"].toString());
+	poco_notice_f2(app.logger(), "checking code:%s message:%s\n", res["code"].toString(), res["message"].toString());
 
 	if (res["code"] == "1" || res["code"] == "6")
 		setSync(_keysn);
@@ -458,7 +459,7 @@ void QZSyncWorker::sendToServer()
 	HTTPResponse response;
 	std::istream& out = session.receiveResponse(response);
 	DynamicStruct res = *extract<Object::Ptr>(out);
-	poco_information_f2(app.logger(), "transfer code:%s message:%s\n", res["code"].toString(), res["message"].toString());
+	poco_notice_f2(app.logger(), "transfer code:%s message:%s\n", res["code"].toString(), res["message"].toString());
 
 	if (res["code"] != "0" && res["code"] != "10")
 		throw Poco::LogicException("transfer failed!", res.toString());

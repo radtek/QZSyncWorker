@@ -52,6 +52,9 @@
     <ClCompile Include="src\BJCASealProvider.cpp">
       <Filter>Provider</Filter>
     </ClCompile>
+    <ClCompile Include="src\SESSealProvider.cpp">
+      <Filter>Provider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -109,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="src\SProvider.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SESSealProvider.h">
+      <Filter>Provider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

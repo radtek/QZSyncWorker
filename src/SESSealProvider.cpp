@@ -1,4 +1,4 @@
-#include "BCBSSealProvider.h"
+#include "SESSealProvider.h"
 #include "Utility.h"
 #include "Poco/DOM/NodeList.h"
 #include "Poco/DOM/NodeFilter.h"
@@ -12,24 +12,24 @@ using namespace Poco::XML;
 
 using Poco::format;
 
-BCBSSealProvider::BCBSSealProvider()
+SESSealProvider::SESSealProvider()
 {
-	utility_message("Enter BCBSSealProvider eseals");
+	utility_message("Enter SESSealProvider eseals");
 
-	sl.load(Utility::config("seals\\SEAL_BaiCheng.dll"));
+	sl.load(Utility::config("seals\\SES\\SealVendor.dll"));
 
-	setProperty("Provider", "BCBSSealProvider");
+	setProperty("Provider", "SESSealProvider");
 }
 
-BCBSSealProvider::~BCBSSealProvider()
+SESSealProvider::~SESSealProvider()
 {
-	utility_message("Exit BCBSSealProvider eseals");
+	utility_message("Exit SESSealProvider eseals");
 }
 
-void BCBSSealProvider::extract(const std::string& cert)
+void SESSealProvider::extract(const std::string& cert)
 {
 	if (!hasStamps())
-		throw Poco::NotFoundException("The stamps were not Found!", "BCBSSealProvider");
+		throw Poco::NotFoundException("The stamps were not Found!", "SESSealProvider");
 
 	_areacode = Utility::CodeFromDN(cert);
 
@@ -37,7 +37,7 @@ void BCBSSealProvider::extract(const std::string& cert)
 	ExtractSealPicture();
 }
 
-void BCBSSealProvider::ExtractSealPicture()
+void SESSealProvider::ExtractSealPicture()
 {
 	utility_message_f1("eseals Seal :\n%s", _sealdata);
 	poco_assert(!_sealdata.empty());
@@ -68,7 +68,7 @@ void BCBSSealProvider::ExtractSealPicture()
 		ob.set("imgext", "gif");
 		ob.set("signType", "80");///第三方签章
 		ob.set("imgArea", _areacode);
-		ob.set("imgItem", "99004");/// 百城签章
+		ob.set("imgItem", "99005");/// 江苏敏行
 		seals.add(ob);
 	}
 
@@ -77,7 +77,7 @@ void BCBSSealProvider::ExtractSealPicture()
 	setProperty("seals", ostr.str());
 }
 
-bool BCBSSealProvider::hasStamps()
+bool SESSealProvider::hasStamps()
 {
 	int k = hasKey();
 	if (!k) return false;
@@ -90,7 +90,7 @@ bool BCBSSealProvider::hasStamps()
 	return false;
 }
 
-bool BCBSSealProvider::hasKey()
+bool SESSealProvider::hasKey()
 {
 	typedef int(__stdcall *IsUKIn)();
 
@@ -102,7 +102,7 @@ bool BCBSSealProvider::hasKey()
 	return (k == 0);
 }
 
-int BCBSSealProvider::count()
+int SESSealProvider::count()
 {
 	typedef int(__stdcall *GetSealCount)();
 	std::string name("GetSealCount");
@@ -115,7 +115,7 @@ int BCBSSealProvider::count()
 	return count;
 }
 
-void BCBSSealProvider::readSeal()
+void SESSealProvider::readSeal()
 {
 	static const int all_seal = -1;
 	typedef char* (*ReadSealData)(int nIndex);

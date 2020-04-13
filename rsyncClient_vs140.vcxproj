@@ -48,6 +48,7 @@
     <ClCompile Include="src\rsyncClient.cpp" />
     <ClCompile Include="src\SealProvider.cpp" />
     <ClCompile Include="src\DianJuSealProvider.cpp" />
+    <ClCompile Include="src\SESSealProvider.cpp" />
     <ClCompile Include="src\TZWYSealProvider.cpp" />
     <ClCompile Include="src\SOFMedia.cpp" />
     <ClCompile Include="src\Utility.cpp" />
@@ -69,6 +70,7 @@
     <ClInclude Include="src\rsyncClient.h" />
     <ClInclude Include="src\SealProvider.h" />
     <ClInclude Include="src\DianJuSealProvider.h" />
+    <ClInclude Include="src\SESSealProvider.h" />
     <ClInclude Include="src\SProvider.h" />
     <ClInclude Include="src\TZWYSealProvider.h" />
     <ClInclude Include="src\SOFMedia.h" />
